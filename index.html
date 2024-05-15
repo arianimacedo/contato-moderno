@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Contato</title>
+</head>
+<body>
+  <div class="container">
+    <div class="contato-box">
+      <div class="esquerda"></div>
+      <div class="direita">
+        <h2>Fale conosco</h2>
+
+        <form id="my-form" action="https://formspree.io/f/xzbwlvla" method="post">
+
+          
+            
+            <label for="inome"></label>
+            <input type="text" name="nome" id="inome" class="campo" placeholder="Nome">
+            <label for="iemail"></label>
+            <input type="email" name="email" id="imail" class="campo" placeholder="Email">
+            <label for="itel"></label>
+            <input type="tel" name="tel" id="itel" class="campo" placeholder="Telefone">
+            <label for="imensagem"></label>
+            <textarea name="mensagem" id="imensagem" class="campo" placeholder="Deixe sua mensagem" cols="30" rows="7"></textarea>
+          
+
+          <input type="submit" class="btn" value="Enviar">
+          <input type="reset" class="btn" value="Limpar">
+
+          <p id=my-form-status></p>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var form = document.getElementById("my-form");
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+        var status = document.getElementById("my-form-status");
+        var data = new FormData(event.target);
+        fetch(event.target.action, {
+            method: form.method,
+            body: data,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                status.innerHTML = "Obrigada pelo contato!";
+                form.reset()
+            } else {
+                response.json().then(data => {
+                    if (Object.hasOwn(data, 'errors')) {
+                        status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
+                    } else {
+                        status.innerHTML = "Opa! Houve um erro no envio do seu formulário"
+                    }
+                })
+            }
+        }).catch(error => {
+            status.innerHTML = "Opa! Houve um erro no envio do seu formulário"
+        });
+    }
+    form.addEventListener("submit", handleSubmit)
+</script>
+</body>
+</html>
